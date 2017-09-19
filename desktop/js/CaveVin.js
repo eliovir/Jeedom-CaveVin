@@ -21,10 +21,10 @@ function addCmdToTable(_cmd) {
     }
 	var tr =$('<tr class="cmd" data-cmd_id="' + init(_cmd.id) + '">');
 	tr.append($('<td>')
-		.append($('<input type="hidden class="cmdAttr form-control input-sm" data-l1key="id">'))
-		.append($('<input type="hidden class="cmdAttr form-control input-sm" data-l1key="logicalId">'))
-		.append($('<input type="hidden class="cmdAttr form-control input-sm" data-l1key="name" value="' + init(_cmd.name) + '">'))
-		.append(init(_cmd.name))
+		.append($('<input type="hidden" class="cmdAttr form-control input-sm" data-l1key="id">'))
+		.append($('<input type="hidden" class="cmdAttr form-control input-sm" data-l1key="logicalId">'))
+		.append($('<input type="hidden" class="cmdAttr form-control input-sm" data-l1key="name" value="' + init(_cmd.name) + '">'))
+		.append(init(_cmd.name).replace("Courant_","Logement "))
 		.append($('<input type="hidden" class="cmdAttr" data-l1key="type" />'))
 		.append($('<input type="hidden" class="cmdAttr" data-l1key="subType" />')));
 	tr.append($('<td>')
