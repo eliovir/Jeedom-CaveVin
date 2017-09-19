@@ -21,9 +21,10 @@ function addCmdToTable(_cmd) {
     }
 	var tr =$('<tr class="cmd" data-cmd_id="' + init(_cmd.id) + '">');
 	tr.append($('<td>')
-		.append($('<input class="cmdAttr form-control input-sm" data-l1key="id" style="display : none;">'))
-		.append($('<input class="cmdAttr form-control input-sm" data-l1key="logicalId" placeholder="{{Pas de vin ajouté à ce casier}}" title="Vin associé" disabled>'))
-		.append($('<input class="cmdAttr form-control input-sm" data-l1key="name" value="' + init(_cmd.name) + '" placeholder="{{Name}}" title="Name" style="display : none;">'))
+		.append($('<input type="hidden class="cmdAttr form-control input-sm" data-l1key="id">'))
+		.append($('<input type="hidden class="cmdAttr form-control input-sm" data-l1key="logicalId">'))
+		.append($('<input type="hidden class="cmdAttr form-control input-sm" data-l1key="name" value="' + init(_cmd.name) + '">'))
+		.append(init(_cmd.name))
 		.append($('<input type="hidden" class="cmdAttr" data-l1key="type" />'))
 		.append($('<input type="hidden" class="cmdAttr" data-l1key="subType" />')));
 	tr.append($('<td>')
