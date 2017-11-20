@@ -4,7 +4,7 @@
 	"licence" : "AGPL",
 	"author" : "Halbout Michael",
 	"require" : "2.4",
-	"category" : "organization",
+	"category" : "health",
 	"display" : "panel",
 	"mobile" : "panel",
 	"eventjs" : 1
