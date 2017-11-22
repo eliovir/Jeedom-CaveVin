@@ -7,5 +7,8 @@
 	"category" : "health",
 	"display" : "panel",
 	"mobile" : "panel",
-	"eventjs" : 1
+	"eventjs" : true,
+	"issue" : "https://github.com/mika-nt28/Jeedom-CaveVin/issues",
+ 	"changelog" : "https://github.com/mika-nt28/Jeedom-CaveVin/commits/master",
+ 	"documentation" : "https://jeedom.github.io/documentation/third_plugin/CaveVin/fr_FR/index.html"
 }
