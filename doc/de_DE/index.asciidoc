@@ -8,7 +8,7 @@ Ce plugin Jeedom nous permet de créer virtuellement notre cave, si on veut on p
 
 === Création d'un casier à bouteille
 
-Rendez vous sur la page de configuration Plugins > Organisation > Cave à vin.
+Gehen Sie zur Konfigurationsseite Plugins> Organisation> Weinkeller.
 
 image::../images/Lien_Configuration.jpg[]
 Créer un nouveau casier, sans oublier de paramétrer le casier
