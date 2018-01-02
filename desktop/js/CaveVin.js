@@ -32,7 +32,10 @@ function addCmdToTable(_cmd) {
 				.append($('<label>').text('{{Déclencheur sortie Bouteille}}'))
 				.append($('<input class="cmdAttr form-control input-sm " data-l1key="configuration" data-l2key="SortieBoutielle" style="width : 90%;display : inline-block;margin:5px;">'))
 				.append($('<a style="display : inline-block;margin:5px;"class="btn btn-default btn-xs cursor bt_selectCmdExpression" style="position : relative; top : 3px;" title="{{Rechercher une commande}}" >')
-					.append($('<i class="fa fa-list-alt">')))));
+					.append($('<i class="fa fa-list-alt">'))))		 
+			.append($('<span>')
+				.append($('<label>').text('{{Url de sortie}}'))
+				.append($('<span class="cmdAttr" data-l1key="configuration" data-l2key="url">'))));
 	tr.append($('<td>')
 		.append($('<a class="btn btn-default btn-xs cmdAction expertModeVisible" data-action="configure">')
 			.append($('<i class="fa fa-cogs">'))));
