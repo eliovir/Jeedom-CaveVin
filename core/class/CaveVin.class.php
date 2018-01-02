@@ -143,8 +143,11 @@ class CaveVin extends eqLogic {
 	}
 }
 class CaveVinCmd extends cmd {
-    public function execute($_options = array()) {
-        
-    }
+	public function preSave() {
+		$url = network::getNetworkAccess('external') . '/plugins/reveil/core/api/jeeCaveVin.php?apikey=' . jeedom::getApiKey('CaveVin') . '&id=' . $this->getId();
+		$this->setConfiguration('url', $url);
+	}
+	public function execute($_options = array()) {
+	}
 }
 ?>
