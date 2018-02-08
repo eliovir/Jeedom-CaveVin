@@ -21,22 +21,28 @@ $eqLogics = eqLogic::byType('CaveVin');
         </div>
     </div>
 
-        <div class="col-lg-10 col-md-9 col-sm-8 eqLogicThumbnailDisplay" style="border-left: solid 1px #EEE; padding-left: 25px;">
-        <legend>{{Mes casiers a bouteilles}}
-        </legend>
-
-            <div class="eqLogicThumbnailContainer">
-                      <div class="cursor eqLogicAction" data-action="add" style="background-color : #ffffff; height : 200px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;" >
-           <center>
-            <i class="fa fa-plus-circle" style="font-size : 7em;color:#808080;"></i>
-        </center>
-        <span style="font-size : 1.1em;position:relative; top : 23px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#808080"><center>Ajouter</center></span>
-    </div>
+       <div class="col-lg-10 col-md-9 col-sm-8 eqLogicThumbnailDisplay" style="border-left: solid 1px #EEE; padding-left: 25px;">
+		<legend>{{Gestion}}</legend>
+		<div class="eqLogicThumbnailContainer">
+			<div class="cursor eqLogicAction" data-action="add" style="background-color : #ffffff; height : 140px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;" >
+				<center>
+					<i class="fa fa-plus-circle" style="font-size : 5em;color:#808080;"></i>
+				</center>
+				<span style="font-size : 1.1em;position:relative; top : 23px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#808080"><center>{{Ajouter}}</center></span>
+			</div>
+			<div class="cursor eqLogicAction" data-action="gotoPluginConf" style="height: 120px; margin-bottom: 10px; padding: 5px; border-radius: 2px; width: 160px; margin-left: 10px; position: absolute; left: 170px; top: 0px; background-color: rgb(255, 255, 255);">
+				<center>
+			      		<i class="fa fa-wrench" style="font-size : 5em;color:#808080;"></i>
+			    	</center>
+			    	<span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#808080"><center>Configuration</center></span>
+			</div>
+		</div>
+	  	<legend>{{Mes casiers a bouteilles}}</legend>
                 <?php
 				foreach ($eqLogics as $eqLogic) {
 					echo '<div class="eqLogicDisplayCard cursor" data-eqLogic_id="' . $eqLogic->getId() . '" style="background-color : #ffffff; height : 200px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;" >';
 					echo "<center>";
-					echo '<img src="plugins/CaveVin/doc/images/CaveVin_icon.png" height="105" width="95" />';
+					echo '<img src="plugins/CaveVin/plugin_info/CaveVin_icon.png" height="105" width="95" />';
 					echo "</center>";
 					echo '<span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;"><center>' . $eqLogic->getHumanName(true, true) . '</center></span>';
 					echo '</div>';
