@@ -10,5 +10,5 @@
 	"eventjs" : true,
 	"issue" : "https://github.com/mika-nt28/Jeedom-CaveVin/issues",
  	"changelog" : "https://github.com/mika-nt28/Jeedom-CaveVin/commits/master",
- 	"documentation" : "https://jeedom.github.io/documentation/third_plugin/CaveVin/fr_FR/index.html"
+ 	"documentation" : "https://mika-nt28.github.io/Jeedom-CaveVin/"
 }
