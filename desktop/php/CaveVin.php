@@ -38,6 +38,7 @@ $eqLogics = eqLogic::byType('CaveVin');
 			</div>
 		</div>
 	  	<legend>{{Mes casiers a bouteilles}}</legend>
+	       <input class="form-control" placeholder="{{Rechercher}}" style="margin-bottom:4px;" id="in_searchEqlogic" />
                 <?php
 				foreach ($eqLogics as $eqLogic) {
 					echo '<div class="eqLogicDisplayCard cursor" data-eqLogic_id="' . $eqLogic->getId() . '" style="background-color : #ffffff; height : 200px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;" >';
