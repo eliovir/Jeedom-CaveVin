@@ -9,7 +9,7 @@ if (!isConnect('admin')) {
 <form class="form-horizontal">
     <fieldset>
         <div class="form-group">
-            <label class="col-lg-3 control-label">{{Le plugin caméra doit réagir aux interactions}}</label>
+            <label class="col-lg-3 control-label">{{Le plugin doit réagir aux interactions}}</label>
             <div class="col-lg-4">
                 <textarea class="configKey form-control" data-l1key="interact::sentence"></textarea>
             </div>
