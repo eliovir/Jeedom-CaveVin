@@ -4,11 +4,46 @@ require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
 include_file('core', 'authentification', 'php');
 include_file('core', 'mesVin', 'class', 'CaveVin');
 class CaveVin extends eqLogic {
-	public static $_widgetPossibility = array('custom' => array(
-	        'visibility' => true,
-	        'displayName' => true,
-	        'optionalParameters' => true,
-	));
+	public static function interact($_query, $_parameters = array()) {
+		$ok = false;
+		$files = array();
+		$matchs = explode("\n", str_replace('\n', "\n", config::byKey('interact::sentence', 'CaveVin')));
+		if (count($matchs) == 0) {
+			return null;
+		}
+		$query = strtolower(sanitizeAccent($_query));
+		foreach ($matchs as $match) {
+			if (preg_match_all('/' . $match . '/', $query)) {
+				$ok = true;
+			}
+		}
+		if (!$ok) {
+			return null;
+		}
+		$data = interactQuery::findInQuery('object', $_query);
+		if (is_object($data['object'])) {
+			foreach ($data['object']->getEqLogic(true, false, 'CaveVin') as $CaveVin) {
+				try {
+					//code d'execution d'un entrer sortie de vin
+				} catch (Exception $e) {
+					return array('reply' => __('Erreur : ', __FILE__) . $e->getMessage());
+				}
+			}
+			foreach ($data['object']->getChilds() as $object) {
+				foreach ($object->getEqLogic(true, false, 'CaveVin') as $CaveVin) {
+					try {
+						//code d'execution d'un entrer sortie de vin
+					} catch (Exception $e) {
+						return array('reply' => __('Erreur : ', __FILE__) . $e->getMessage());
+					}
+				}
+			}
+		}
+		if (count($files) == 0) {
+			return null;
+		}
+		return array('reply' => 'Ok', 'file' => '');
+	}
 	public static function AddCommande($eqLogic,$Name) {
 		$Commande = CaveVinCmd::byEqLogicIdCmdName($eqLogic->getId(),$Name);//$eqLogic->getCmd(null,$_logicalId);
 		if (!is_object($Commande))
