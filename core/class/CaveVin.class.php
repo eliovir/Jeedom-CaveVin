@@ -20,29 +20,28 @@ class CaveVin extends eqLogic {
 		if (!$ok) {
 			return null;
 		}
+		//Recherche de la cave
 		$data = interactQuery::findInQuery('object', $_query);
-		if (is_object($data['object'])) {
-			foreach ($data['object']->getEqLogic(true, false, 'CaveVin') as $CaveVin) {
-				try {
-					//code d'execution d'un entrer sortie de vin
-				} catch (Exception $e) {
-					return array('reply' => __('Erreur : ', __FILE__) . $e->getMessage());
+		if (is_object($data['object']))
+			$object=$data['object']
+		$data = interactQuery::findInQuery('eqLogic', $_query);
+		if (is_object($data['eqLogic']))
+			$CaveVin=$data['eqLogic']
+		$data = interactQuery::findInQuery('cmd', $_query);
+		if (is_object($data['cmd'])){
+			//Si un logement est trouvé alors j'ajoute ou enleve une bouteille
+			$Logement=$data['cmd']
+			// Recheche du vin
+			foreach (mesVin::all() as $mesVin) {
+				if (interactQuery::autoInteractWordFind($data['query'], $mesVin->getNom())) {
+					return array('reply' => __('Ok j\'ai ', __FILE__) . $query);
 				}
 			}
-			foreach ($data['object']->getChilds() as $object) {
-				foreach ($object->getEqLogic(true, false, 'CaveVin') as $CaveVin) {
-					try {
-						//code d'execution d'un entrer sortie de vin
-					} catch (Exception $e) {
-						return array('reply' => __('Erreur : ', __FILE__) . $e->getMessage());
-					}
-				}
-			}
+		}else{
+			//Si aucun logement ,'est trouvé lors je cree un nouvelle bouteille
+			
 		}
-		if (count($files) == 0) {
-			return null;
-		}
-		return array('reply' => 'Ok', 'file' => '');
+		return array('reply' => 'Ok');
 	}
 	public static function AddCommande($eqLogic,$Name) {
 		$Commande = CaveVinCmd::byEqLogicIdCmdName($eqLogic->getId(),$Name);//$eqLogic->getCmd(null,$_logicalId);
