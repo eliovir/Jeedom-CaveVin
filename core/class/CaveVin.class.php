@@ -23,14 +23,14 @@ class CaveVin extends eqLogic {
 		//Recherche de la cave
 		$data = interactQuery::findInQuery('object', $_query);
 		if (is_object($data['object']))
-			$object=$data['object']
+			$object=$data['object'];
 		$data = interactQuery::findInQuery('eqLogic', $_query);
 		if (is_object($data['eqLogic']))
-			$CaveVin=$data['eqLogic']
+			$CaveVin=$data['eqLogic'];
 		$data = interactQuery::findInQuery('cmd', $_query);
 		if (is_object($data['cmd'])){
 			//Si un logement est trouvé alors j'ajoute ou enleve une bouteille
-			$Logement=$data['cmd']
+			$Logement=$data['cmd'];
 			// Recheche du vin
 			foreach (mesVin::all() as $mesVin) {
 				if (interactQuery::autoInteractWordFind($data['query'], $mesVin->getNom())) {
