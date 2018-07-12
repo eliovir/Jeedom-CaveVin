@@ -1,24 +1,23 @@
-<div style="padding:0;width:55px;height:55px;" class="cmd #history# tooltips cmd-widget container-fluid" data-type="info" data-subtype="binary" data-cmd_id="#id#" title="#Vigification#">
-	<div>
-		<div style="position: absolute;">
-			
-			<img class="SelectCase img-responsive" width='50' src='./plugins/CaveVin/core/template/images/CasierSelect.png'>
-			<div style="position: absolute;left: 50%;top:50%;text-align: center;">
-				#NbBouteille#
-			</div>
-		</div>
-		<img class="iconCmd#id# img-responsive" width='50' src='./plugins/CaveVin/core/template/images/CasierVide.png'>
+<div style="padding:0;width:55px;height:55px;" class="cmd tooltips cmd-widget container-fluid" data-type="info" data-subtype="binary" data-cmd_id="#id#" data-cmd_uid="#uid#" data-version="#version#" title="#Vigification#">
+	<div style="position: absolute;">
+		<img class="SelectCase img-responsive" width='50' src='plugins/CaveVin/core/template/images/CasierSelect.png'>
+		<div class="NbBouteille" style="position: absolute;left: 50%;top:50%;text-align: center;"></div>
 	</div>
-	<script>
-		$(".iconCmd#id#").empty();
-		$(".SelectCase").hide();
-		if ("#state#" == "1") {
-			$(".iconCmd#id#").attr('src','./plugins/CaveVin/core/template/images/Casier#Couleur#.png');
-		} else {
-			$(".iconCmd#id#").attr('src','./plugins/CaveVin/core/template/images/CasierVide.png');
+        <span style="font-size: 3em;font-weight: bold;margin-top: 5px;" class="iconCmd"></span>
+    	<script>
+		jeedom.cmd.update['#id#'] = function(_options){
+			$(".cmd[data-cmd_uid=#uid#] .SelectCase").hide();
+			$('.cmd[data-cmd_id=#id#] .NbBouteille').empty().append(_options.NbBouteille);
+			if (_options.display_value == '1') {
+				$('.cmd[data-cmd_id=#id#] .iconCmd').empty().append("<img width='50' src='plugins/CaveVin/core/template/images/Casier'+_options.Couleur+'.png'>");
+			} else {
+				$('.cmd[data-cmd_id=#id#] .iconCmd').empty().append("<img width='50' src='plugins/CaveVin/core/template/images/CasierVide.png'>");
+
+			}
 		}
-		$('.cmd[data-cmd_id=#id#]').on('click', function() {
-			$(".SelectCase").hide();
+		jeedom.cmd.update['#id#']({display_value:'#state#',NbBouteille:'#NbBouteille#',Couleur:'#Couleur#'});
+		$('.cmd[data-cmd_uid=#uid#] .iconCmd').off().on('click', function () {
+			$(".cmd[data-cmd_uid=#uid#] .SelectCase").hide();
 			$(this).parent().find(".SelectCase").show();
 			logement='#id#';
 			if (ActiveDialog){
@@ -34,5 +33,5 @@
 			else
 				getVinInformation('#logicalId#');
 		});
-	</script>
+    </script>
 </div>
