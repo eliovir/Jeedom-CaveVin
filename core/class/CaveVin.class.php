@@ -44,13 +44,14 @@ class CaveVin extends eqLogic {
 		return array('reply' => 'Ok');
 	}
 	public function AddCommande($Name,$_logicalId) {
-		$Commande = $this->getCmd(null,$_logicalId);
+		$Commande = cmd::byEqLogicIdCmdName($this->getId(),$Name);
+		//$Commande = $this->getCmd(null,$_logicalId);
 		if (!is_object($Commande))
 		{
 			$Commande = new CaveVinCmd();
 			$Commande->setId(null);
 			$Commande->setEqLogic_id($this->getId());
-			$Commande->setLogicalId($_logicalId);
+			//$Commande->setLogicalId($_logicalId);
 			$Commande->setType("info");
 			$Commande->setSubType("binary");
 			$Commande->setTemplate('dashboard','Bouteille');
