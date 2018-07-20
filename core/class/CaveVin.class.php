@@ -43,22 +43,23 @@ class CaveVin extends eqLogic {
 		}
 		return array('reply' => 'Ok');
 	}
-	public static function AddCommande($eqLogic,$Name) {
-		$Commande = CaveVinCmd::byEqLogicIdCmdName($eqLogic->getId(),$Name);//$eqLogic->getCmd(null,$_logicalId);
+	public function AddCommande($Name,$_logicalId) {
+		$Commande = $this->getCmd(null,$_logicalId);
 		if (!is_object($Commande))
 		{
 			$Commande = new CaveVinCmd();
 			$Commande->setId(null);
-			$Commande->setEqLogic_id($eqLogic->getId());
+			$Commande->setEqLogic_id($this->getId());
+			$Commande->setLogicalId($_logicalId);
 			$Commande->setType("info");
 			$Commande->setSubType("binary");
-			$Commande->setName($Name);
 			$Commande->setTemplate('dashboard','Bouteille');
 			$Commande->setTemplate('mobile','Bouteille');
 			$Commande->setEventOnly(true);
 			$Commande->setIsVisible(true);
-			$Commande->save();
 		}
+		$Commande->setName($Name);
+		$Commande->save();
 		return $Commande;
 	}
 	public static function ImportVins($File) {
@@ -131,10 +132,8 @@ class CaveVin extends eqLogic {
 		}
 		$listener->save();	
 		for($heightCase=1;$heightCase<=$this->getConfiguration('heightCase');$heightCase++){
-			for($widthCase=1;$widthCase<=$this->getConfiguration('widthCase');$widthCase++){
-				$Name=$this->getName().'_'.$widthCase."x".$heightCase;
-				self::AddCommande($this,$Name);
-			}
+			for($widthCase=1;$widthCase<=$this->getConfiguration('widthCase');$widthCase++)
+				$this->AddCommande('Rang '.$widthCase." Colonne ".$heightCase,$widthCase."x".$heightCase);
 		}
     	}
   	public function toHtml($_version = 'mobile',$Dialog=true) {
