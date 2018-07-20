@@ -11,7 +11,7 @@ if (!isConnect('admin')) {
         <div class="form-group">
             <label class="col-lg-3 control-label">{{Le plugin doit réagir aux interactions}}</label>
             <div class="col-lg-4">
-                <textarea class="configKey form-control" data-l1key="interact::sentence"></textarea>
+      		<textarea class="configKey form-control" data-l1key="interact::sentence"></textarea>
             </div>
         </div>
     </fieldset>
