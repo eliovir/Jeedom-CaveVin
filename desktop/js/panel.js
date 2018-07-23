@@ -34,6 +34,7 @@ if((!isset(userProfils.doNotAutoHideMenu) || userProfils.doNotAutoHideMenu != 1)
 }
 HtmlWidget($('.li_eqLogic').first().attr('data-eqlogic_id'));
 var logement='';
+var ActiveDialog=true;
 $('.FicheVinDisplay').load('index.php?v=d&modal=FicheVin.CaveVin&plugin=CaveVin&type=CaveVin', function() {
 	$('.selecVin').hide();
 });
