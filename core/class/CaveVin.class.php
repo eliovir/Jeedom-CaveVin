@@ -4,27 +4,63 @@ require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
 include_file('core', 'authentification', 'php');
 include_file('core', 'mesVin', 'class', 'CaveVin');
 class CaveVin extends eqLogic {
-	public static $_widgetPossibility = array('custom' => array(
-	        'visibility' => true,
-	        'displayName' => true,
-	        'optionalParameters' => true,
-	));
-	public static function AddCommande($eqLogic,$Name) {
-		$Commande = CaveVinCmd::byEqLogicIdCmdName($eqLogic->getId(),$Name);//$eqLogic->getCmd(null,$_logicalId);
+	public static function interact($_query, $_parameters = array()) {
+		$ok = false;
+		$files = array();
+		$matchs = explode("\n", str_replace('\n', "\n", config::byKey('interact::sentence', 'CaveVin')));
+		if (count($matchs) == 0) {
+			return null;
+		}
+		$query = strtolower(sanitizeAccent($_query));
+		foreach ($matchs as $match) {
+			if (preg_match_all('/' . $match . '/', $query)) {
+				$ok = true;
+			}
+		}
+		if (!$ok) {
+			return null;
+		}
+		//Recherche de la cave
+		$data = interactQuery::findInQuery('object', $_query);
+		if (is_object($data['object']))
+			$object=$data['object'];
+		$data = interactQuery::findInQuery('eqLogic', $_query);
+		if (is_object($data['eqLogic']))
+			$CaveVin=$data['eqLogic'];
+		$data = interactQuery::findInQuery('cmd', $_query);
+		if (is_object($data['cmd'])){
+			//Si un logement est trouvé alors j'ajoute ou enleve une bouteille
+			$Logement=$data['cmd'];
+			// Recheche du vin
+			foreach (mesVin::all() as $mesVin) {
+				if (interactQuery::autoInteractWordFind($data['query'], $mesVin->getNom())) {
+					return array('reply' => __('Ok j\'ai ', __FILE__) . $query);
+				}
+			}
+		}else{
+			//Si aucun logement ,'est trouvé lors je cree un nouvelle bouteille
+			
+		}
+		return array('reply' => 'Ok');
+	}
+	public function AddCommande($Name,$_logicalId) {
+		$Commande = cmd::byEqLogicIdCmdName($this->getId(),$Name);
+		//$Commande = $this->getCmd(null,$_logicalId);
 		if (!is_object($Commande))
 		{
 			$Commande = new CaveVinCmd();
 			$Commande->setId(null);
-			$Commande->setEqLogic_id($eqLogic->getId());
+			$Commande->setEqLogic_id($this->getId());
+			//$Commande->setLogicalId($_logicalId);
 			$Commande->setType("info");
 			$Commande->setSubType("binary");
-			$Commande->setName($Name);
 			$Commande->setTemplate('dashboard','Bouteille');
 			$Commande->setTemplate('mobile','Bouteille');
 			$Commande->setEventOnly(true);
 			$Commande->setIsVisible(true);
-			$Commande->save();
 		}
+		$Commande->setName($Name);
+		$Commande->save();
 		return $Commande;
 	}
 	public static function ImportVins($File) {
@@ -97,10 +133,8 @@ class CaveVin extends eqLogic {
 		}
 		$listener->save();	
 		for($heightCase=1;$heightCase<=$this->getConfiguration('heightCase');$heightCase++){
-			for($widthCase=1;$widthCase<=$this->getConfiguration('widthCase');$widthCase++){
-				$Name=$this->getName().'_'.$widthCase."x".$heightCase;
-				self::AddCommande($this,$Name);
-			}
+			for($widthCase=1;$widthCase<=$this->getConfiguration('widthCase');$widthCase++)
+				$this->AddCommande('Rang '.$widthCase." Colonne ".$heightCase,$widthCase."x".$heightCase);
 		}
     	}
   	public function toHtml($_version = 'mobile',$Dialog=true) {
