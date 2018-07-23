@@ -20,7 +20,7 @@
 			$(this).closest('.eqLogic').find(".SelectCase").hide();
 			$(this).parent().find(".SelectCase").show();
 			logement='#id#';
-			if ( typeof ActiveDialog !== 'undefined' && ActiveDialog == false ){
+			if ( typeof ActiveDialog === 'undefined' || ActiveDialog == false ){
 				$('#md_modal').dialog({
 					title: "Fiche vin du casier",
 						height: 700,
