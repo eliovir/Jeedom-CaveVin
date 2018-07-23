@@ -128,6 +128,7 @@ include_file('core', 'mesVin', 'class', 'CaveVin');
 									<option value="gibier">{{Gibier}}</option>
 									<option value="blanc">{{Viande blanche}}</option>
 									<option value="rouge">{{Viande rouge}}</option>
+									<option value="dessert">{{Dessert}}</option>
 								</select>
 							</td>
 						</tr>
