@@ -160,11 +160,11 @@ class CaveVin extends eqLogic {
 			foreach ($this->getCmd(null, null, true) as $cmd) {
 				 $vin=mesVin::byId($cmd->getLogicalId());
 				 if(is_object($vin)){
-					$replaceCasierInfo['#Vigification'] = $vin->getVinification();
+					$replaceCasierInfo['#Vigification#'] = $vin->getVinification();
 				 	$replaceCasierInfo['#Couleur#'] = $vin->getCouleur();
 				 	$replaceCasierInfo['#NbBouteille#'] = $vin->getNbVin();
 				 }else{
-					$replaceCasierInfo['#Vigification'] = "";
+					$replaceCasierInfo['#Vigification#'] = "Pas de vin dans ce logement";
 				 	$replaceCasierInfo['#Couleur#'] = "Rouge";
 				 	$replaceCasierInfo['#NbBouteille#'] = "0";
 				 }
@@ -178,7 +178,7 @@ class CaveVin extends eqLogic {
 }
 class CaveVinCmd extends cmd {
 	public function preSave() {
-		$url = network::getNetworkAccess('external') . '/plugins/reveil/core/api/jeeCaveVin.php?apikey=' . jeedom::getApiKey('CaveVin') . '&id=' . $this->getId();
+		$url = network::getNetworkAccess('external') . '/plugins/CaveVin/core/api/jeeCaveVin.php?apikey=' . jeedom::getApiKey('CaveVin') . '&id=' . $this->getId();
 		$this->setConfiguration('url', $url);
 	}
 	public function execute($_options = array()) {
