@@ -67,7 +67,7 @@ function CaveVin_update() {
 		$sql = "ALTER TABLE `mesVin` ADD `Garde` text COLLATE 'utf8_general_ci' NULL;";
 		DB::Prepare($sql, array(), DB::FETCH_TYPE_ROW);
 	}
-	foreach(eqLogic::byType('CaveVin' as $Cave){
+	foreach(eqLogic::byType('CaveVin') as $Cave){
 		for($heightCase=1;$heightCase<=$Cave->getConfiguration('heightCase');$heightCase++){
 			for($widthCase=1;$widthCase<=$Cave->getConfiguration('widthCase');$widthCase++){
 				$Name=$Cave->getName().'_'.$widthCase."x".$heightCase;
