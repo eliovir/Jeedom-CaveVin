@@ -22,26 +22,28 @@ class CaveVin extends eqLogic {
 		}
 		//Recherche de la cave
 		$data = interactQuery::findInQuery('object', $_query);
-		if (is_object($data['object']))
+		if (is_object($data['object'])){
 			$object=$data['object'];
-		$data = interactQuery::findInQuery('eqLogic', $_query);
-		if (is_object($data['eqLogic']))
-			$CaveVin=$data['eqLogic'];
-		$data = interactQuery::findInQuery('cmd', $_query);
-		if (is_object($data['cmd'])){
-			//Si un logement est trouvé alors j'ajoute ou enleve une bouteille
-			$Logement=$data['cmd'];
-			// Recheche du vin
-			foreach (mesVin::all() as $mesVin) {
-				if (interactQuery::autoInteractWordFind($data['query'], $mesVin->getNom())) {
-					return array('reply' => __('Ok j\'ai ', __FILE__) . $query);
+           		$data = interactQuery::findInQuery('cmd', $_query,$object->getEqLogic(true,false,'CaveVin'));
+			if (is_object($data['cmd'])){
+				//Si un logement est trouvé alors j'ajoute ou enleve une bouteille
+				$Logement=$data['cmd'];
+				//log::add('CaveVin','debug',json_encode($Logement));	
+				// Recheche du vin
+				foreach (mesVin::all() as $Vin) {
+					if (interactQuery::autoInteractWordFind($data['query'], $Vin->getNom())) {
+						$Logement->setLogicalId($Vin->getId());
+						$Logement->save();
+						return array('reply' => __('Ok j\'ai ', __FILE__) . $query);
+					}
 				}
 			}
 		}else{
 			//Si aucun logement ,'est trouvé lors je cree un nouvelle bouteille
+			return array('ask' => 'Ok, Pour cree une nouvelle fiche de vin j\'ai quelques question a vous poser');
 			
 		}
-		return array('reply' => 'Ok');
+		return array('error' => 'Je ne vous ai pas compris');
 	}
 	public function AddCommande($Name,$_logicalId) {
 		$Commande = cmd::byEqLogicIdCmdName($this->getId(),$Name);
@@ -152,7 +154,7 @@ class CaveVin extends eqLogic {
 		for($heightCase=1;$heightCase<=$this->getConfiguration('heightCase');$heightCase++){
 			$HtmlCasier.= '<tr>';
 			for($widthCase=1;$widthCase<=$this->getConfiguration('widthCase');$widthCase++){
-					$HtmlCasier.='<td>#'.$this->getName().'_'.$widthCase.'x'.$heightCase.'#</td>';
+					$HtmlCasier.='<td>#Rang '.$widthCase." Colonne ".$heightCase.'#</td>';
 				}
 			$HtmlCasier.='</tr>';
 		}
