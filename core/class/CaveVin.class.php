@@ -22,36 +22,38 @@ class CaveVin extends eqLogic {
 		}
 		//Recherche de la cave
 		$data = interactQuery::findInQuery('object', $_query);
-		if (is_object($data['object']))
+		if (is_object($data['object'])){
 			$object=$data['object'];
-		$data = interactQuery::findInQuery('eqLogic', $_query);
-		if (is_object($data['eqLogic']))
-			$CaveVin=$data['eqLogic'];
-		$data = interactQuery::findInQuery('cmd', $_query);
-		if (is_object($data['cmd'])){
-			//Si un logement est trouvé alors j'ajoute ou enleve une bouteille
-			$Logement=$data['cmd'];
-			// Recheche du vin
-			foreach (mesVin::all() as $mesVin) {
-				if (interactQuery::autoInteractWordFind($data['query'], $mesVin->getNom())) {
-					return array('reply' => __('Ok j\'ai ', __FILE__) . $query);
+           		$data = interactQuery::findInQuery('cmd', $_query,$object->getEqLogic(true,false,'CaveVin'));
+			if (is_object($data['cmd'])){
+				//Si un logement est trouvé alors j'ajoute ou enleve une bouteille
+				$Logement=$data['cmd'];
+				//log::add('CaveVin','debug',json_encode($Logement));	
+				// Recheche du vin
+				foreach (mesVin::all() as $Vin) {
+					if (interactQuery::autoInteractWordFind($data['query'], $Vin->getNom())) {
+						$Logement->setLogicalId($Vin->getId());
+						$Logement->save();
+						return array('reply' => __('Ok j\'ai ', __FILE__) . $query);
+					}
 				}
 			}
 		}else{
 			//Si aucun logement ,'est trouvé lors je cree un nouvelle bouteille
+			return array('ask' => 'Ok, Pour cree une nouvelle fiche de vin j\'ai quelques question a vous poser');
 			
 		}
-		return array('reply' => 'Ok');
+		return array('error' => 'Je ne vous ai pas compris');
 	}
 	public function AddCommande($Name,$_logicalId) {
-		$Commande = cmd::byEqLogicIdCmdName($this->getId(),$Name);
-		//$Commande = $this->getCmd(null,$_logicalId);
+		//$Commande = cmd::byEqLogicIdCmdName($this->getId(),$Name);
+		$Commande = $this->getCmd(null,$_logicalId);
 		if (!is_object($Commande))
 		{
 			$Commande = new CaveVinCmd();
 			$Commande->setId(null);
 			$Commande->setEqLogic_id($this->getId());
-			//$Commande->setLogicalId($_logicalId);
+			$Commande->setLogicalId($_logicalId);
 			$Commande->setType("info");
 			$Commande->setSubType("binary");
 			$Commande->setTemplate('dashboard','Bouteille');
@@ -148,31 +150,28 @@ class CaveVin extends eqLogic {
 			'#width#' => $this->getDisplay('width', '250'),
 			'#dialog#' => $Dialog,
 		);	
-		$HtmlCasier='';
+		$replace['#Casier#']='';
 		for($heightCase=1;$heightCase<=$this->getConfiguration('heightCase');$heightCase++){
-			$HtmlCasier.= '<tr>';
+			$replace['#Casier#'].= '<tr>';
 			for($widthCase=1;$widthCase<=$this->getConfiguration('widthCase');$widthCase++){
-					$HtmlCasier.='<td>#'.$this->getName().'_'.$widthCase.'x'.$heightCase.'#</td>';
+					$replace['#Casier#'].='<td>#'.$widthCase."x".$heightCase.'#</td>';
 				}
-			$HtmlCasier.='</tr>';
+			$replace['#Casier#'].='</tr>';
 		}
-		if ($this->getIsEnable()) {
-			foreach ($this->getCmd(null, null, true) as $cmd) {
-				 $vin=mesVin::byId($cmd->getLogicalId());
-				 if(is_object($vin)){
-					$replaceCasierInfo['#Vigification#'] = $vin->getVinification();
-				 	$replaceCasierInfo['#Couleur#'] = $vin->getCouleur();
-				 	$replaceCasierInfo['#NbBouteille#'] = $vin->getNbVin();
-				 }else{
-					$replaceCasierInfo['#Vigification#'] = "Pas de vin dans ce logement";
-				 	$replaceCasierInfo['#Couleur#'] = "Rouge";
-				 	$replaceCasierInfo['#NbBouteille#'] = "0";
-				 }
-				 	
-				 $replaceCasier['#'.$cmd->getName().'#'] = template_replace($replaceCasierInfo,$cmd->toHtml($_version));
-			}
-		}   
-		$replace['#Casier#']=template_replace($replaceCasier,$HtmlCasier) ;
+		foreach ($this->getCmd(null, null, true) as $cmd){
+			$replaceCasier['#Vin#'] = $cmd->getConfiguration('vin','');
+			$vin=mesVin::byId($cmd->getConfiguration('vin'));
+			if(is_object($vin)){			
+				$replaceCasier['#Vigification#'] = $vin->getVinification();
+				$replaceCasier['#Couleur#'] = $vin->getCouleur();
+				$replaceCasier['#NbBouteille#'] = $vin->getNbVin();
+			}else{
+				$replaceCasier['#Vigification#'] = "Pas de vin dans ce logement";
+				$replaceCasier['#Couleur#'] = "Rouge";
+				$replaceCasier['#NbBouteille#'] = "0";
+			} 	
+			$replace['#'.$cmd->getLogicalId().'#'] = template_replace($replaceCasier,$cmd->toHtml($_version));
+		}
 		return template_replace($replace, getTemplate('core', $_version, 'eqLogic','CaveVin'));
 	}
 }
