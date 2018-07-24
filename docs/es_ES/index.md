@@ -7,6 +7,13 @@ Ce plugin Jeedom nous permet de créer virtuellement notre cave, si on veut on p
 Configuration
 ===
 
+![introduction01](../images/pluginConfiguration.jpg)
+
+
+Par defaut, jeedom n'active pas le panel.
+Il est necessaire d'activé le pannel afin de pouvoir cree une fiche de vin
+![introduction01](../images/activePanel.jpg)
+
 Création d'un casier à bouteille
 ---
 
