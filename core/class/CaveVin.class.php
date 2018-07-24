@@ -150,38 +150,32 @@ class CaveVin extends eqLogic {
 			'#width#' => $this->getDisplay('width', '250'),
 			'#dialog#' => $Dialog,
 		);	
-		$HtmlCasier='';
+		$replace['#Casier#']='';
 		for($heightCase=1;$heightCase<=$this->getConfiguration('heightCase');$heightCase++){
-			$HtmlCasier.= '<tr>';
+			$replace['#Casier#'].= '<tr>';
 			for($widthCase=1;$widthCase<=$this->getConfiguration('widthCase');$widthCase++){
-					$HtmlCasier.='<td>#Rang '.$widthCase." Colonne ".$heightCase.'#</td>';
+					$replace['#Casier#'].='<td>#'.$widthCase."x".$heightCase.'#</td>';
 				}
-			$HtmlCasier.='</tr>';
+			$replace['#Casier#'].='</tr>';
 		}
-		if ($this->getIsEnable()) {
-			foreach ($this->getCmd(null, null, true) as $cmd)
-				$replaceCasier['#'.$cmd->getLogicalId().'#'] = $cmd->toHtml($_version);
-		}   
-		$replace['#Casier#']=template_replace($replaceCasier,$HtmlCasier) ;
+		foreach ($this->getCmd(null, null, true) as $cmd){
+			$replaceCasier['#Vin#'] = $cmd->getConfiguration('vin','');
+			$vin=mesVin::byId($cmd->getConfiguration('vin'));
+			if(is_object($vin)){			
+				$replaceCasier['#Vigification#'] = $vin->getVinification();
+				$replaceCasier['#Couleur#'] = $vin->getCouleur();
+				$replaceCasier['#NbBouteille#'] = $vin->getNbVin();
+			}else{
+				$replaceCasier['#Vigification#'] = "Pas de vin dans ce logement";
+				$replaceCasier['#Couleur#'] = "Rouge";
+				$replaceCasier['#NbBouteille#'] = "0";
+			} 	
+			$replace['#'.$cmd->getLogicalId().'#'] = template_replace($replaceCasier,$cmd->toHtml($_version));
+		}
 		return template_replace($replace, getTemplate('core', $_version, 'eqLogic','CaveVin'));
 	}
 }
 class CaveVinCmd extends cmd {
-	public function toHtml($_version = 'mobile',$Dialog=true) {
-		$_version = jeedom::versionAlias($_version);
-		$replace['#Vin#'] = $this->getConfiguration('vin','');
-		$vin=mesVin::byId($this->getConfiguration('vin'));
-		if(is_object($vin)){			
-			$replace['#Vigification#'] = $vin->getVinification();
-			$replace['#Couleur#'] = $vin->getCouleur();
-			$replace['#NbBouteille#'] = $vin->getNbVin();
-		}else{
-			$replace['#Vigification#'] = "Pas de vin dans ce logement";
-			$replace['#Couleur#'] = "Rouge";
-			$replace['#NbBouteille#'] = "0";
-		} 	
-		return template_replace($replace,$this->toHtml($_version));
-	}
 	public function preSave() {
 		$url = network::getNetworkAccess('external') . '/plugins/CaveVin/core/api/jeeCaveVin.php?apikey=' . jeedom::getApiKey('CaveVin') . '&id=' . $this->getId();
 		$this->setConfiguration('url', $url);
