@@ -170,11 +170,13 @@ class CaveVinCmd extends cmd {
 	public function toHtml($_version = 'mobile',$Dialog=true) {
 		$_version = jeedom::versionAlias($_version);
 		$vin=mesVin::byId($this->getConfiguration('vin'));
-		if(is_object($vin)){
+		if(is_object($vin)){			
+			$replace['#Vin#'] = $this->getConfiguration('vin');
 			$replace['#Vigification#'] = $vin->getVinification();
 			$replace['#Couleur#'] = $vin->getCouleur();
 			$replace['#NbBouteille#'] = $vin->getNbVin();
 		}else{
+			$replace['#Vin#'] = '';
 			$replace['#Vigification#'] = "Pas de vin dans ce logement";
 			$replace['#Couleur#'] = "Rouge";
 			$replace['#NbBouteille#'] = "0";
