@@ -49,7 +49,7 @@ try {
 			log::add('CaveVin','debug','Mise a jours de la bouteille: '.init('logement').' '.init('status'));
 			$Commande->setCollectDate('');
 			$Commande->event(init('status'));
-			$Commande->setLogicalId(init('type'));
+			$Commande->setConfiguration('vin',init('type'));
 			$Commande->getEqLogic()->refreshWidget();
 			$Commande->save();
 			ajax::success(true);
