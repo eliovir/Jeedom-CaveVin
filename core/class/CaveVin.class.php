@@ -186,6 +186,7 @@ class CaveVin extends eqLogic {
 						if($Logement->getConfiguration('vin') == $VinId) 
 							$Qts++;
 						$QtsTypeVin+=$Qts;
+					}
 				}
 			}
 		}
