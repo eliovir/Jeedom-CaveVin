@@ -164,7 +164,7 @@ class CaveVin extends eqLogic {
 			if(is_object($vin)){			
 				$replaceCasier['#Vigification#'] = $vin->getVinification();
 				$replaceCasier['#Couleur#'] = $vin->getCouleur();
-				$replaceCasier['#NbBouteille#'] = $vin->getNbVin();
+				$replaceCasier['#NbBouteille#'] = $this->getNbVin($vin->getId());
 			}else{
 				$replaceCasier['#Vigification#'] = "Pas de vin dans ce logement";
 				$replaceCasier['#Couleur#'] = "Rouge";
@@ -173,6 +173,22 @@ class CaveVin extends eqLogic {
 			$replace['#'.$cmd->getLogicalId().'#'] = template_replace($replaceCasier,$cmd->toHtml($_version));
 		}
 		return template_replace($replace, getTemplate('core', $_version, 'eqLogic','CaveVin'));
+	}
+	public function getNbVin($VinId) {
+		$QtsTypeVin=0;
+		$Caves=eqLogic::byType('CaveVin');
+		if (is_array($Caves)){
+			foreach ($Caves as $Cave){
+				if (is_object($Cave)){
+					$Qts=0;
+					foreach ($Cave->getCmd() as $Logement){
+						if($Logement->getConfiguration('vin') == $VinId) 
+							$Qts++;
+						$QtsTypeVin+=$Qts;
+				}
+			}
+		}
+		return $QtsTypeVin;
 	}
 }
 class CaveVinCmd extends cmd {
