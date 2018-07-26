@@ -176,7 +176,7 @@ class CaveVin extends eqLogic {
 	}
 	public static function getNbVin($VinId,$Caves=null) {
 		$QtsTypeVin=0;
-		if($Caves == null)
+		//if($Caves == null)
 			$Caves=eqLogic::byType('CaveVin');
 		if (is_array($Caves)){
 			foreach ($Caves as $Cave){
