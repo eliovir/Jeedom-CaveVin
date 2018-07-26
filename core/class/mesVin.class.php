@@ -149,26 +149,5 @@ class mesVin {
 	public function getGarde() {
 		return $this->Garde;
 	}
-	public function getNbVin() {
-		$QtsTypeVin=0;
-		/*
-		$Caves=eqLogic::byTypeAndSearhConfiguration('CaveVin');
-		if (is_array($Caves)){
-			foreach ($Caves as $Cave){
-				if (is_object($Cave)){
-					$Qts=count($Cave->getCmd(null, $this->id,null,true));
-					$QtsTypeVin=$QtsTypeVin+$Qts;
-				}
-			}
-		}*/
-		$Logements=cmd::searchConfiguration(array('vin'=>$this->id),'CaveVin');
-		if (is_array($Logements)){
-			foreach ($Logements as $Logement){
-				if($Logement->getConfiguration('vin') == $this->id) 
-					$QtsTypeVin++;
-			}
-		}
-		return;
-	}
 }
 ?>
