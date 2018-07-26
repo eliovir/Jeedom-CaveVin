@@ -164,7 +164,7 @@ class CaveVin extends eqLogic {
 			if(is_object($vin)){			
 				$replaceCasier['#Vigification#'] = $vin->getVinification();
 				$replaceCasier['#Couleur#'] = $vin->getCouleur();
-				$replaceCasier['#NbBouteille#'] = $this->getNbVin($vin->getId());
+				$replaceCasier['#NbBouteille#'] = self::getNbVin($vin->getId(),array($this));
 			}else{
 				$replaceCasier['#Vigification#'] = "Pas de vin dans ce logement";
 				$replaceCasier['#Couleur#'] = "Rouge";
@@ -174,9 +174,10 @@ class CaveVin extends eqLogic {
 		}
 		return template_replace($replace, getTemplate('core', $_version, 'eqLogic','CaveVin'));
 	}
-	public function getNbVin($VinId) {
+	public static function getNbVin($VinId,$Caves=null) {
 		$QtsTypeVin=0;
-		$Caves=eqLogic::byType('CaveVin');
+		if($Caves == null)
+			$Caves=eqLogic::byType('CaveVin');
 		if (is_array($Caves)){
 			foreach ($Caves as $Cave){
 				if (is_object($Cave)){
