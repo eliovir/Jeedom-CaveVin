@@ -183,11 +183,12 @@ class CaveVin extends eqLogic {
 				if (is_object($Cave)){
 					$Qts=0;
 					foreach ($Cave->getCmd() as $Logement){
+						log::add('CaveVin','debug',$Cave->getHumanName().$Logement->getHumanName().'Recherche du vin : '.$Logement->getConfiguration('vin') .'=='. $VinId);	
 						if($Logement->getConfiguration('vin') == $VinId) 
 							$Qts++;
-						$QtsTypeVin+=$Qts;
 					}
 				}
+				$QtsTypeVin+=$Qts;
 			}
 		}
 		return $QtsTypeVin;
