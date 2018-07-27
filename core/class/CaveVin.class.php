@@ -174,9 +174,9 @@ class CaveVin extends eqLogic {
 		}
 		return template_replace($replace, getTemplate('core', $_version, 'eqLogic','CaveVin'));
 	}
-	public static function getNbVin($VinId,$Caves=null) {
+	public static function getNbVin($VinId,$Caves='') {
 		$QtsTypeVin=0;
-		//if($Caves == null)
+		if($Caves == '')
 			$Caves=eqLogic::byType('CaveVin');
 		if (is_array($Caves)){
 			foreach ($Caves as $Cave){
