@@ -17,21 +17,21 @@
 		}
 		jeedom.cmd.update['#id#']({display_value:'#state#',NbBouteille:'#NbBouteille#',Couleur:'#Couleur#'});
 		$('.cmd[data-cmd_uid=#uid#] .iconCmd').off().on('click', function () {
-			$(".cmd[data-cmd_uid=#uid#] .SelectCase").hide();
+			$(this).closest('.eqLogic').find(".SelectCase").hide();
 			$(this).parent().find(".SelectCase").show();
 			logement='#id#';
-			if (ActiveDialog){
+			if ( typeof ActiveDialog === 'undefined' || ActiveDialog == false ){
 				$('#md_modal').dialog({
 					title: "Fiche vin du casier",
 						height: 700,
 						width: 850});
 				$('#md_modal').load('index.php?v=d&modal=FicheVin.CaveVin&plugin=CaveVin&type=CaveVin', function() {
-					getVinInformation('#logicalId#');
+					getVinInformation('#Vin#');
 				});
 				$('#md_modal').dialog('open');
 			}	
 			else
-				getVinInformation('#logicalId#');
+				getVinInformation('#Vin#');
 		});
     </script>
 </div>

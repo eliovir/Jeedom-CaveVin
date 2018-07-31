@@ -4,27 +4,65 @@ require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
 include_file('core', 'authentification', 'php');
 include_file('core', 'mesVin', 'class', 'CaveVin');
 class CaveVin extends eqLogic {
-	public static $_widgetPossibility = array('custom' => array(
-	        'visibility' => true,
-	        'displayName' => true,
-	        'optionalParameters' => true,
-	));
-	public static function AddCommande($eqLogic,$Name) {
-		$Commande = CaveVinCmd::byEqLogicIdCmdName($eqLogic->getId(),$Name);//$eqLogic->getCmd(null,$_logicalId);
+	public static function interact($_query, $_parameters = array()) {
+		$ok = false;
+		$files = array();
+		$matchs = explode("\n", str_replace('\n', "\n", config::byKey('interact::sentence', 'CaveVin')));
+		if (count($matchs) == 0) {
+			return null;
+		}
+		$query = strtolower(sanitizeAccent($_query));
+		foreach ($matchs as $match) {
+			if (preg_match_all('/' . $match . '/', $query)) {
+				$ok = true;
+			}
+		}
+		if (!$ok) {
+			return null;
+		}
+		//Recherche de la cave
+		$data = interactQuery::findInQuery('object', $_query);
+		if (is_object($data['object'])){
+			$object=$data['object'];
+           		$data = interactQuery::findInQuery('cmd', $_query,$object->getEqLogic(true,false,'CaveVin'));
+			if (is_object($data['cmd'])){
+				//Si un logement est trouvé alors j'ajoute ou enleve une bouteille
+				$Logement=$data['cmd'];
+				//log::add('CaveVin','debug',json_encode($Logement));	
+				// Recheche du vin
+				foreach (mesVin::all() as $Vin) {
+					if (interactQuery::autoInteractWordFind($data['query'], $Vin->getNom())) {
+						$Logement->setLogicalId($Vin->getId());
+						$Logement->save();
+						return array('reply' => __('Ok j\'ai ', __FILE__) . $query);
+					}
+				}
+			}
+		}else{
+			//Si aucun logement ,'est trouvé lors je cree un nouvelle bouteille
+			return array('ask' => 'Ok, Pour cree une nouvelle fiche de vin j\'ai quelques question a vous poser');
+			
+		}
+		return array('error' => 'Je ne vous ai pas compris');
+	}
+	public function AddCommande($Name,$_logicalId) {
+		//$Commande = cmd::byEqLogicIdCmdName($this->getId(),$Name);
+		$Commande = $this->getCmd(null,$_logicalId);
 		if (!is_object($Commande))
 		{
 			$Commande = new CaveVinCmd();
 			$Commande->setId(null);
-			$Commande->setEqLogic_id($eqLogic->getId());
+			$Commande->setEqLogic_id($this->getId());
+			$Commande->setLogicalId($_logicalId);
 			$Commande->setType("info");
 			$Commande->setSubType("binary");
-			$Commande->setName($Name);
 			$Commande->setTemplate('dashboard','Bouteille');
 			$Commande->setTemplate('mobile','Bouteille');
 			$Commande->setEventOnly(true);
 			$Commande->setIsVisible(true);
-			$Commande->save();
 		}
+		$Commande->setName($Name);
+		$Commande->save();
 		return $Commande;
 	}
 	public static function ImportVins($File) {
@@ -97,10 +135,8 @@ class CaveVin extends eqLogic {
 		}
 		$listener->save();	
 		for($heightCase=1;$heightCase<=$this->getConfiguration('heightCase');$heightCase++){
-			for($widthCase=1;$widthCase<=$this->getConfiguration('widthCase');$widthCase++){
-				$Name=$this->getName().'_'.$widthCase."x".$heightCase;
-				self::AddCommande($this,$Name);
-			}
+			for($widthCase=1;$widthCase<=$this->getConfiguration('widthCase');$widthCase++)
+				$this->AddCommande('Rang '.$widthCase." Colonne ".$heightCase,$widthCase."x".$heightCase);
 		}
     	}
   	public function toHtml($_version = 'mobile',$Dialog=true) {
@@ -114,37 +150,53 @@ class CaveVin extends eqLogic {
 			'#width#' => $this->getDisplay('width', '250'),
 			'#dialog#' => $Dialog,
 		);	
-		$HtmlCasier='';
+		$replace['#Casier#']='';
 		for($heightCase=1;$heightCase<=$this->getConfiguration('heightCase');$heightCase++){
-			$HtmlCasier.= '<tr>';
+			$replace['#Casier#'].= '<tr>';
 			for($widthCase=1;$widthCase<=$this->getConfiguration('widthCase');$widthCase++){
-					$HtmlCasier.='<td>#'.$this->getName().'_'.$widthCase.'x'.$heightCase.'#</td>';
+					$replace['#Casier#'].='<td>#'.$widthCase."x".$heightCase.'#</td>';
 				}
-			$HtmlCasier.='</tr>';
+			$replace['#Casier#'].='</tr>';
 		}
-		if ($this->getIsEnable()) {
-			foreach ($this->getCmd(null, null, true) as $cmd) {
-				 $vin=mesVin::byId($cmd->getLogicalId());
-				 if(is_object($vin)){
-					$replaceCasierInfo['#Vigification'] = $vin->getVinification();
-				 	$replaceCasierInfo['#Couleur#'] = $vin->getCouleur();
-				 	$replaceCasierInfo['#NbBouteille#'] = $vin->getNbVin();
-				 }else{
-					$replaceCasierInfo['#Vigification'] = "";
-				 	$replaceCasierInfo['#Couleur#'] = "Rouge";
-				 	$replaceCasierInfo['#NbBouteille#'] = "0";
-				 }
-				 	
-				 $replaceCasier['#'.$cmd->getName().'#'] = template_replace($replaceCasierInfo,$cmd->toHtml($_version));
-			}
-		}   
-		$replace['#Casier#']=template_replace($replaceCasier,$HtmlCasier) ;
+		foreach ($this->getCmd(null, null, true) as $cmd){
+			$replaceCasier['#Vin#'] = $cmd->getConfiguration('vin','');
+			$vin=mesVin::byId($cmd->getConfiguration('vin'));
+			if(is_object($vin)){			
+				$replaceCasier['#Vigification#'] = $vin->getVinification();
+				$replaceCasier['#Couleur#'] = $vin->getCouleur();
+				$replaceCasier['#NbBouteille#'] = self::getNbVin($vin->getId(),array($this));
+			}else{
+				$replaceCasier['#Vigification#'] = "Pas de vin dans ce logement";
+				$replaceCasier['#Couleur#'] = "Rouge";
+				$replaceCasier['#NbBouteille#'] = "0";
+			} 	
+			$replace['#'.$cmd->getLogicalId().'#'] = template_replace($replaceCasier,$cmd->toHtml($_version));
+		}
 		return template_replace($replace, getTemplate('core', $_version, 'eqLogic','CaveVin'));
+	}
+	public static function getNbVin($VinId,$Caves='') {
+		$QtsTypeVin=0;
+		if($Caves == '')
+			$Caves=eqLogic::byType('CaveVin');
+		if (is_array($Caves)){
+			foreach ($Caves as $Cave){
+				if (is_object($Cave)){
+					$Qts=0;
+					foreach ($Cave->getCmd() as $Logement){
+						//log::add('CaveVin','debug',$Cave->getHumanName().$Logement->getHumanName().'Recherche du vin : '.$Logement->getConfiguration('vin') .'=='. $VinId);	
+						if($Logement->getConfiguration('vin') == $VinId) 
+							$Qts++;
+					}
+				}
+				$QtsTypeVin+=$Qts;
+			}
+		}
+		return $QtsTypeVin;
 	}
 }
 class CaveVinCmd extends cmd {
 	public function preSave() {
-		$url = network::getNetworkAccess('external') . '/plugins/reveil/core/api/jeeCaveVin.php?apikey=' . jeedom::getApiKey('CaveVin') . '&id=' . $this->getId();
+		$url = network::getNetworkAccess('external') . '/plugins/CaveVin/core/api/jeeCaveVin.php?apikey=' . jeedom::getApiKey('CaveVin') . '&id=' . $this->getId();
 		$this->setConfiguration('url', $url);
 	}
 	public function execute($_options = array()) {

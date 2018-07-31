@@ -149,18 +149,5 @@ class mesVin {
 	public function getGarde() {
 		return $this->Garde;
 	}
-	public function getNbVin() {
-		$QtsTypeVin=0;
-		$Caves=eqLogic::byType('CaveVin');
-		if (is_array($Caves)){
-			foreach ($Caves as $Cave){
-				if (is_object($Cave)){
-					$Qts=count($Cave->getCmd(null, $this->id,null,true));
-					$QtsTypeVin=$QtsTypeVin+$Qts;
-				}
-			}
-		}
-		return $QtsTypeVin;
-	}
 }
 ?>

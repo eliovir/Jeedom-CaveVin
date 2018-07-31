@@ -23,20 +23,8 @@ try {
 				$return = utils::o2a(mesVin::all());
 			break;
 		}
-		for($loop=0;$loop<count($return);$loop++){
-			$QtsTypeVin=0;
-			$Caves=eqLogic::byType('CaveVin');
-			if (is_array($Caves)){
-				foreach ($Caves as $Cave){
-					if (is_object($Cave)){
-						$Qts=count($Cave->getCmd(null, $return[$loop]['id'],null,true));
-						log::add('CaveVin','debug',$Qts.' bouteille(s) de'.$return[$loop]['Nom'].' ont été trouvé');
-						$QtsTypeVin=$QtsTypeVin+$Qts;
-					}
-				}
-			}
-			$return[$loop]['QtsTypeVin']=$QtsTypeVin;
-		}
+		for($loop=0;$loop<count($return);$loop++)
+			$return[$loop]['QtsTypeVin']=CaveVin::getNbVin($return[$loop]['id']);
         	ajax::success(jeedom::toHumanReadable($return));
 	}
 	if (init('action') == 'getVinInformation') {	
@@ -49,7 +37,7 @@ try {
 			log::add('CaveVin','debug','Mise a jours de la bouteille: '.init('logement').' '.init('status'));
 			$Commande->setCollectDate('');
 			$Commande->event(init('status'));
-			$Commande->setLogicalId(init('type'));
+			$Commande->setConfiguration('vin',init('type'));
 			$Commande->getEqLogic()->refreshWidget();
 			$Commande->save();
 			ajax::success(true);

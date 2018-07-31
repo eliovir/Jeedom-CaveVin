@@ -21,7 +21,7 @@ include_file('core', 'mesVin', 'class', 'CaveVin');
 			<tr>
 				<td colspan="2">	
 					<input type="hidden" class="mesVinAttr form-control" data-l1key="id"/>
-					<center><input type="text" class="mesVinAttr form-control " data-l1key="Nom" /></center>
+					<center><input type="text" class="mesVinAttr form-control " data-l1key="Nom" placeholder="{{Saisir le nom de votre vin}}"/></center>
 				</td>
 			</tr>
 			<tr>
@@ -29,12 +29,12 @@ include_file('core', 'mesVin', 'class', 'CaveVin');
 					<table style="width: 90%;">	
 						<tr>
 							<td>
-								<textarea cols="2" rows="10" class="mesVinAttr form-control " data-l1key="Vinification" ></textarea>
+								<textarea cols="2" rows="10" class="mesVinAttr form-control " data-l1key="Vinification" placeholder="{{Saisir une courte description du vin et/ou du vignoble}}"></textarea>
 							</td>
 						</tr>			
 						<tr>	
 							<td>
-								<input id="bt_uploadEttiquette" type="file" name="file" data-url="plugins/CaveVin/core/ajax/CaveVin.ajax.php?action=uploadEttiquette"/>
+								<input id="bt_uploadEttiquette" type="file" name="file" data-url="plugins/CaveVin/core/ajax/CaveVin.ajax.php?action=uploadEttiquette" placeholder="{{Importer a votre fiche l'étiquette de votre vin}}"/>
 								<input class="mesVinAttr form-control" type="hidden" data-l1key="Ettiquette"/>
 								<img class="imgEttiquette img-responsive">			
 							</td>	
@@ -46,7 +46,7 @@ include_file('core', 'mesVin', 'class', 'CaveVin');
 						<tr>		
 							<td>Cépage: </td>
 							<td>
-								<input type="text" class="mesVinAttr form-control " data-l1key="Cepage" />
+								<input type="text" class="mesVinAttr form-control " data-l1key="Cepage" placeholder="{{Saisir le cepage de votre vin}}"/>
 							</td>
 						</tr>
 						<tr>
@@ -62,55 +62,74 @@ include_file('core', 'mesVin', 'class', 'CaveVin');
 						<tr>
 							<td>Millésime: </td>
 							<td>
-								<input type="text" class="mesVinAttr form-control " data-l1key="Millesime" />
+								<input type="text" class="mesVinAttr form-control " data-l1key="Millesime" placeholder="{{Saisir le millésime de votre vin}}" />
 							</td>
 						</tr>
 						<tr>
 							<td>Terroir: </td>
 							<td>
-								<input type="text" class="mesVinAttr form-control " data-l1key="Terroir" />
+								<input type="text" class="mesVinAttr form-control " data-l1key="Terroir" placeholder="{{Saisir le terroir}}"/>
 							</td>
 						</tr>
 						<tr>
 							<td>Degre Alcoolique: </td>
 							<td>
-								<input type="text" class="mesVinAttr form-control " data-l1key="DegreAlcoolique" />
+								<input type="text" class="mesVinAttr form-control " data-l1key="DegreAlcoolique" placeholder="{{Saisir son degré d'alcool}}"/>
 							</td>
 						</tr>
 						<tr>
 							<td>Date d'apogée: </td>
 							<td>
-								<input type="text" class="mesVinAttr form-control " data-l1key="Apogee" />
+								<input type="text" class="mesVinAttr form-control " data-l1key="Apogee" placeholder="{{Saisir la date d'apogé si vous la connaissez}}"/>
 							</td>
 						</tr>
 						<tr>
 							<td>Date de garde: </td>
 							<td>
-								<input type="text" class="mesVinAttr form-control " data-l1key="Garde" />
+								<input type="text" class="mesVinAttr form-control " data-l1key="Garde" placeholder="{{Saisir la date limite de garde si vous la connaissez}}"/>
 							</td>
 						</tr>
 						<tr>
 							<td>Température idéale de consommation: </td>
 							<td>
-								<input type="text" class="mesVinAttr form-control " data-l1key="TempIdeal" />
+								<input type="text" class="mesVinAttr form-control " data-l1key="TempIdeal" placeholder="{{Saisir la température idéal si vous la connaissez}}" />
 							</td>
 						</tr>
 						<tr>
 							<td>Laisser décanter: </td>
 							<td>
-								<input type="text" class="mesVinAttr form-control " data-l1key="Decanter" />
+								<input type="text" class="mesVinAttr form-control " data-l1key="Decanter" placeholder="{{Saisir la temps de decantage si vous le connaissez}}"/>
 							</td>
 						</tr>
 						<tr>
 							<td>Volume: </td>
 							<td>
-								<input type="text" class="mesVinAttr form-control " data-l1key="Volume" />
+								<select class="mesVinAttr form-control " data-l1key="Volume" >
+									<option value="0.05">{{Mignonette (5cl)}}</option>
+									<option value="0.35">{{Demi-bouteille (35cl)}}</option>
+									<option value="0.375">{{Fillette (37,5cl)}}</option>
+									<option value="0.46">{{Pot (46cl)}}</option>
+									<option value="0.5">{{Désirée (50cl)}}</option>
+									<option value="0.62">{{Clavelin (62cl)}}</option>
+									<option value="0.75">{{Bouteille (75cl)}}</option>
+									<option value="0.8">{{Namuroise (80cl)}}</option>
+									<option value="1.28">{{Grosse panse (1,28l)}}</option>
+									<option value="1.5">{{Fiasque (1,5l)}}</option>
+									<option value="10">{{Dame-jeanne (10l)}}</option>
+								</select>
 							</td>
 						</tr>
 						<tr>
 							<td>Plat a associer: </td>
 							<td>
-								<input type="text" class="mesVinAttr form-control " data-l1key="Met" />
+								<select class="mesVinAttr form-control " data-l1key="Met" multiple>
+									<option value="apero">{{Apéritif}}</option>
+									<option value="fromage">{{Fromage}}</option>
+									<option value="gibier">{{Gibier}}</option>
+									<option value="blanc">{{Viande blanche}}</option>
+									<option value="rouge">{{Viande rouge}}</option>
+									<option value="dessert">{{Dessert}}</option>
+								</select>
 							</td>
 						</tr>
 					</table>
