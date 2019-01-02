@@ -4,7 +4,7 @@ require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
 include_file('core', 'authentification', 'php');
 include_file('core', 'mesVin', 'class', 'CaveVin');
 class CaveVin extends eqLogic {
-	public static function interact($_query, $_parameters = array()) {
+	/*public static function interact($_query, $_parameters = array()) {
 		$ok = false;
 		$files = array();
 		$matchs = explode("\n", str_replace('\n', "\n", config::byKey('interact::sentence', 'CaveVin')));
@@ -44,7 +44,7 @@ class CaveVin extends eqLogic {
 			
 		}
 		return array('error' => 'Je ne vous ai pas compris');
-	}
+	}*/
 	public function AddCommande($Name,$_logicalId) {
 		//$Commande = cmd::byEqLogicIdCmdName($this->getId(),$Name);
 		$Commande = $this->getCmd(null,$_logicalId);
