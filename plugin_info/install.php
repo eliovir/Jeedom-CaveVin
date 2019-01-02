@@ -33,6 +33,8 @@ function CaveVin_install() {
 		$sql = "ALTER TABLE `mesVin` ADD `Garde` text COLLATE 'utf8_general_ci' NULL;";
 		DB::Prepare($sql, array(), DB::FETCH_TYPE_ROW);
 	}
+	while(is_object($listener=listener::byClassAndFunction('CaveVin', 'pull')))
+		$listener->remove();
 }
 
 function CaveVin_update() {
