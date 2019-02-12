@@ -165,14 +165,21 @@ class CaveVin extends eqLogic {
 				$replaceCasier['#Vigification#'] = $vin->getVinification();
 				$replaceCasier['#Couleur#'] = $vin->getCouleur();
 				$replaceCasier['#NbBouteille#'] = self::getNbVin($vin->getId(),array($this));
+				$replaceCasier['#Attention#'] = self::isApogee($vin);
 			}else{
 				$replaceCasier['#Vigification#'] = "Pas de vin dans ce logement";
-				$replaceCasier['#Couleur#'] = "Rouge";
+				$replaceCasier['#Couleur#'] = "";
 				$replaceCasier['#NbBouteille#'] = "0";
+				$replaceCasier['#Attention#'] = false;
 			} 	
 			$replace['#'.$cmd->getLogicalId().'#'] = template_replace($replaceCasier,$cmd->toHtml($_version));
 		}
 		return template_replace($replace, getTemplate('core', $_version, 'eqLogic','CaveVin'));
+	}
+	public static function isApogee($vin) {
+		if($vin->getApogee() >= date("Y"))
+			return true;
+		return false;
 	}
 	public static function getNbVin($VinId,$Caves='') {
 		$QtsTypeVin=0;
