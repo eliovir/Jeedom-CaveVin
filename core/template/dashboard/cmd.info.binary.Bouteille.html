@@ -2,12 +2,16 @@
 	<div style="position: absolute;">
 		<img class="SelectCase img-responsive" width='50' src='plugins/CaveVin/core/template/images/CasierSelect.png'>
 		<div class="NbBouteille" style="position: absolute;left: 50%;top:50%;text-align: center;"></div>
+		<div class="Attention" style="position: absolute;top:50%;text-align: right;">!</div>
 	</div>
         <span style="font-size: 3em;font-weight: bold;margin-top: 5px;" class="iconCmd"></span>
     	<script>
 		jeedom.cmd.update['#id#'] = function(_options){
 			$(".cmd[data-cmd_uid=#uid#] .SelectCase").hide();
 			$('.cmd[data-cmd_id=#id#] .NbBouteille').empty().append(_options.NbBouteille);
+			$('.cmd[data-cmd_id=#id#] .Attention').hide();
+			if(_options.Attention)
+				$('.cmd[data-cmd_id=#id#] .Attention').show();
 			if (_options.display_value == '1') {
 				$('.cmd[data-cmd_id=#id#] .iconCmd').empty().append("<img width='50' src='plugins/CaveVin/core/template/images/Casier"+_options.Couleur+".png'>");
 			} else {
@@ -15,7 +19,7 @@
 
 			}
 		}
-		jeedom.cmd.update['#id#']({display_value:'#state#',NbBouteille:'#NbBouteille#',Couleur:'#Couleur#'});
+		jeedom.cmd.update['#id#']({display_value:'#state#',NbBouteille:'#NbBouteille#',Couleur:'#Couleur#',Attention:'#Attention#'});
 		$('.cmd[data-cmd_uid=#uid#] .iconCmd').off().on('click', function () {
 			$(this).closest('.eqLogic').find(".SelectCase").hide();
 			$(this).parent().find(".SelectCase").show();
